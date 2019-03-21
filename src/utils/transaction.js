@@ -5,7 +5,6 @@ const { btoa } = require('./base64');
 const { longToByteArray, byteArray2hexStr, bytesToString } = require('./bytes');
 const { hexStr2byteArray } = require('../lib/code');
 const { Transaction } = require('../protocol/core/Tron_pb');
-const google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
 const { base64DecodeFromString } = require('../lib/code');
 const {
   AccountCreateContract,
@@ -27,16 +26,14 @@ const {
   ProposalApproveContract,
   ProposalDeleteContract,
   SetAccountIdContract,
-  CustomContract,
   CreateSmartContract,
   TriggerSmartContract,
-  GetContract,
   UpdateSettingContract,
   ExchangeCreateContract,
   ExchangeInjectContract,
   ExchangeWithdrawContract,
   ExchangeTransactionContract,
-  UpdateEnergyLimitContract
+  UpdateEnergyLimitContract,
 } = require('../protocol/core/Contract_pb');
 
 const ContractType = Transaction.Contract.ContractType;
@@ -64,7 +61,6 @@ ContractTable[ContractType.CREATESMARTCONTRACT] = [CreateSmartContract.deseriali
 ContractTable[ContractType.TRIGGERSMARTCONTRACT] = [TriggerSmartContract.deserializeBinary, 'protocol.TriggerSmartContract'];
 ContractTable[ContractType.UPDATESETTINGCONTRACT] = [UpdateSettingContract.deserializeBinary, 'protocol.UpdateSettingContract'];
 ContractTable[ContractType.EXCHANGECREATECONTRACT] = [ExchangeCreateContract.deserializeBinary, 'protocol.ExchangeCreateContract'];
-
 ContractTable[ContractType.EXCHANGEINJECTCONTRACT] = [ExchangeInjectContract.deserializeBinary, 'protocol.ExchangeInjectContract'];
 ContractTable[ContractType.EXCHANGEWITHDRAWCONTRACT] = [ExchangeWithdrawContract.deserializeBinary, 'protocol.ExchangeWithdrawContract'];
 ContractTable[ContractType.EXCHANGETRANSACTIONCONTRACT] = [ExchangeTransactionContract.deserializeBinary, 'protocol.ExchangeTransactionContract'];
@@ -100,6 +96,7 @@ const TransactionFields = {
         return token;
       }
     }
+    return bytesToString(Array.from(base64DecodeFromString(token)));
   },
   firstTokenId(token) { return bytesToString(Array.from(base64DecodeFromString(token))); },
   secondTokenId(token) { return bytesToString(Array.from(base64DecodeFromString(token))); },
@@ -113,19 +110,22 @@ function decodeTransactionFields(transaction) {
     if (Array.isArray(transactionResult[key])) {
       transactionResult[key].forEach(decodeTransactionFields);
     } else if (TransactionFields[key]) {
-      transactionResult[key] = TransactionFields[key](transactionResult[key],transaction.contractType);
+      transactionResult[key] = TransactionFields[key](transactionResult[key], transaction.contractType);
     }
   });
   return transactionResult;
 }
 
 function deserializeTransaction(tx) {
-  if (!tx) return null;
+  if (!tx || !tx.getRawData()) return null;
   try {
-    const transaction = tx.getRawData().toObject()
+    const transaction = tx.getRawData().toObject();
     const contract = tx.getRawData().getContractList()[0];
     const any = contract.getParameter();
     const contractType = contract.getType();
+
+    if (!ContractTable[contractType]) return null;
+
     let transference = any.unpack(ContractTable[contractType][0], ContractTable[contractType][1]);
     transference = transference.toObject();
     transference.contractType = contractType;
@@ -359,11 +359,11 @@ function buildAssetParticipateTransaction(address, issuerAddress, token, amount)
  * @param {object} options options list
  *
  */
-function buildAssetIssueTransaction(address, name, shortName, description, url, totalSupply, icoNum, icoTrxPerNum, icoStartTime, icoEndTime, frozenSupply) {
+function buildAssetIssueTransaction(address, name, shortName, description, url, totalSupply, icoNum, icoTrxPerNum, icoStartTime, icoEndTime, frozenSupply, precision = 0) {
   const contract = new AssetIssueContract();
   contract.setOwnerAddress(Uint8Array.from(decode58Check(address)));
   contract.setName(encodeString(name));
-  contract.setAbbr(encodeString(shortName))
+  contract.setAbbr(encodeString(shortName));
   contract.setDescription(encodeString(description));
   contract.setTotalSupply(totalSupply);
   contract.setNum(icoNum);
@@ -374,6 +374,7 @@ function buildAssetIssueTransaction(address, name, shortName, description, url, 
   contract.setPublicFreeAssetNetUsage(0);
   contract.setFreeAssetNetLimit(0);
   contract.setPublicFreeAssetNetLimit(0);
+  contract.setPrecision(precision);
 
   if (frozenSupply) {
     for (const frozenSupplyItem of frozenSupply) {
@@ -403,7 +404,7 @@ function builUpdateAssetTransaction(options) {
   contract.setOwnerAddress(Uint8Array.from(decode58Check(options.address)));
   contract.setUrl(encodeString(options.url));
   contract.setDescription(encodeString(options.description));
-  //TODO newLimit & newPublicLimit?
+  // TODO newLimit & newPublicLimit?
 
   const transaction = buildTransferContract(
     contract,
@@ -515,13 +516,13 @@ function buildExchangeCreateContractTransaction(address, firstTokenId, firstToke
   contract.setFirstTokenBalance(firstTokenBalance);
   contract.setSecondTokenId(encodeString(secondTokenId));
   contract.setSecondTokenBalance(secondTokenBalance);
-  
+
   const transaction = buildTransferContract(
     contract,
     Transaction.Contract.ContractType.EXCHANGECREATECONTRACT,
-    'ExchangeCreateContract'
+    'ExchangeCreateContract',
   );
-  
+
   return transaction;
 }
 
@@ -543,9 +544,9 @@ function buildExchangeInjectContractContractTransaction(address, exchangeId, tok
   const transaction = buildTransferContract(
     contract,
     Transaction.Contract.ContractType.EXCHANGEINJECTCONTRACT,
-    'ExchangeInjectContract'
+    'ExchangeInjectContract',
   );
-  
+
   return transaction;
 }
 
@@ -567,9 +568,9 @@ function buildExchangeWithdrawContractTransaction(address, exchangeId, tokenId, 
   const transaction = buildTransferContract(
     contract,
     Transaction.Contract.ContractType.EXCHANGEWITHDRAWCONTRACT,
-    'ExchangeWithdrawContract'
+    'ExchangeWithdrawContract',
   );
-  
+
   return transaction;
 }
 
@@ -592,12 +593,12 @@ function buildExchangeTransactionContractTransaction(address, exchangeId, tokenI
   const transaction = buildTransferContract(
     contract,
     Transaction.Contract.ContractType.EXCHANGETRANSACTIONCONTRACT,
-    'ExchangeTransactionContract'
+    'ExchangeTransactionContract',
   );
-  
+
   return transaction;
 }
-  
+
 /**
  * Add block reference to transaction
  * This is a needed step after building the transaction before signing the transaction it to the network.
