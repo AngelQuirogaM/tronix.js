@@ -5,12 +5,13 @@ var grpc = require('grpc');
 var api_api_pb = require('../api/api_pb.js');
 var core_Tron_pb = require('../core/Tron_pb.js');
 var core_Contract_pb = require('../core/Contract_pb.js');
+//var google_api_annotations_pb = require('../google/api/annotations_pb.js');
 
 function serialize_protocol_Account(arg) {
   if (!(arg instanceof core_Tron_pb.Account)) {
     throw new Error('Expected argument of type protocol.Account');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_Account(buffer_arg) {
@@ -21,7 +22,7 @@ function serialize_protocol_AccountCreateContract(arg) {
   if (!(arg instanceof core_Contract_pb.AccountCreateContract)) {
     throw new Error('Expected argument of type protocol.AccountCreateContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_AccountCreateContract(buffer_arg) {
@@ -32,7 +33,7 @@ function serialize_protocol_AccountNetMessage(arg) {
   if (!(arg instanceof api_api_pb.AccountNetMessage)) {
     throw new Error('Expected argument of type protocol.AccountNetMessage');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_AccountNetMessage(buffer_arg) {
@@ -43,7 +44,7 @@ function serialize_protocol_AccountPaginated(arg) {
   if (!(arg instanceof api_api_pb.AccountPaginated)) {
     throw new Error('Expected argument of type protocol.AccountPaginated');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_AccountPaginated(buffer_arg) {
@@ -54,7 +55,7 @@ function serialize_protocol_AccountResourceMessage(arg) {
   if (!(arg instanceof api_api_pb.AccountResourceMessage)) {
     throw new Error('Expected argument of type protocol.AccountResourceMessage');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_AccountResourceMessage(buffer_arg) {
@@ -65,7 +66,7 @@ function serialize_protocol_AccountUpdateContract(arg) {
   if (!(arg instanceof core_Contract_pb.AccountUpdateContract)) {
     throw new Error('Expected argument of type protocol.AccountUpdateContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_AccountUpdateContract(buffer_arg) {
@@ -76,7 +77,7 @@ function serialize_protocol_AddressPrKeyPairMessage(arg) {
   if (!(arg instanceof api_api_pb.AddressPrKeyPairMessage)) {
     throw new Error('Expected argument of type protocol.AddressPrKeyPairMessage');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_AddressPrKeyPairMessage(buffer_arg) {
@@ -87,7 +88,7 @@ function serialize_protocol_AssetIssueContract(arg) {
   if (!(arg instanceof core_Contract_pb.AssetIssueContract)) {
     throw new Error('Expected argument of type protocol.AssetIssueContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_AssetIssueContract(buffer_arg) {
@@ -98,7 +99,7 @@ function serialize_protocol_AssetIssueList(arg) {
   if (!(arg instanceof api_api_pb.AssetIssueList)) {
     throw new Error('Expected argument of type protocol.AssetIssueList');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_AssetIssueList(buffer_arg) {
@@ -109,7 +110,7 @@ function serialize_protocol_Block(arg) {
   if (!(arg instanceof core_Tron_pb.Block)) {
     throw new Error('Expected argument of type protocol.Block');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_Block(buffer_arg) {
@@ -120,7 +121,7 @@ function serialize_protocol_BlockExtention(arg) {
   if (!(arg instanceof api_api_pb.BlockExtention)) {
     throw new Error('Expected argument of type protocol.BlockExtention');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_BlockExtention(buffer_arg) {
@@ -131,7 +132,7 @@ function serialize_protocol_BlockLimit(arg) {
   if (!(arg instanceof api_api_pb.BlockLimit)) {
     throw new Error('Expected argument of type protocol.BlockLimit');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_BlockLimit(buffer_arg) {
@@ -142,7 +143,7 @@ function serialize_protocol_BlockList(arg) {
   if (!(arg instanceof api_api_pb.BlockList)) {
     throw new Error('Expected argument of type protocol.BlockList');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_BlockList(buffer_arg) {
@@ -153,7 +154,7 @@ function serialize_protocol_BlockListExtention(arg) {
   if (!(arg instanceof api_api_pb.BlockListExtention)) {
     throw new Error('Expected argument of type protocol.BlockListExtention');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_BlockListExtention(buffer_arg) {
@@ -164,7 +165,7 @@ function serialize_protocol_BlockReference(arg) {
   if (!(arg instanceof api_api_pb.BlockReference)) {
     throw new Error('Expected argument of type protocol.BlockReference');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_BlockReference(buffer_arg) {
@@ -175,7 +176,7 @@ function serialize_protocol_BuyStorageBytesContract(arg) {
   if (!(arg instanceof core_Contract_pb.BuyStorageBytesContract)) {
     throw new Error('Expected argument of type protocol.BuyStorageBytesContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_BuyStorageBytesContract(buffer_arg) {
@@ -186,7 +187,7 @@ function serialize_protocol_BuyStorageContract(arg) {
   if (!(arg instanceof core_Contract_pb.BuyStorageContract)) {
     throw new Error('Expected argument of type protocol.BuyStorageContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_BuyStorageContract(buffer_arg) {
@@ -197,7 +198,7 @@ function serialize_protocol_BytesMessage(arg) {
   if (!(arg instanceof api_api_pb.BytesMessage)) {
     throw new Error('Expected argument of type protocol.BytesMessage');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_BytesMessage(buffer_arg) {
@@ -208,7 +209,7 @@ function serialize_protocol_ChainParameters(arg) {
   if (!(arg instanceof core_Tron_pb.ChainParameters)) {
     throw new Error('Expected argument of type protocol.ChainParameters');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_ChainParameters(buffer_arg) {
@@ -219,7 +220,7 @@ function serialize_protocol_CreateSmartContract(arg) {
   if (!(arg instanceof core_Contract_pb.CreateSmartContract)) {
     throw new Error('Expected argument of type protocol.CreateSmartContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_CreateSmartContract(buffer_arg) {
@@ -230,7 +231,7 @@ function serialize_protocol_DelegatedResourceAccountIndex(arg) {
   if (!(arg instanceof core_Tron_pb.DelegatedResourceAccountIndex)) {
     throw new Error('Expected argument of type protocol.DelegatedResourceAccountIndex');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_DelegatedResourceAccountIndex(buffer_arg) {
@@ -241,7 +242,7 @@ function serialize_protocol_DelegatedResourceList(arg) {
   if (!(arg instanceof api_api_pb.DelegatedResourceList)) {
     throw new Error('Expected argument of type protocol.DelegatedResourceList');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_DelegatedResourceList(buffer_arg) {
@@ -252,7 +253,7 @@ function serialize_protocol_DelegatedResourceMessage(arg) {
   if (!(arg instanceof api_api_pb.DelegatedResourceMessage)) {
     throw new Error('Expected argument of type protocol.DelegatedResourceMessage');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_DelegatedResourceMessage(buffer_arg) {
@@ -263,7 +264,7 @@ function serialize_protocol_DynamicProperties(arg) {
   if (!(arg instanceof core_Tron_pb.DynamicProperties)) {
     throw new Error('Expected argument of type protocol.DynamicProperties');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_DynamicProperties(buffer_arg) {
@@ -274,7 +275,7 @@ function serialize_protocol_EasyTransferByPrivateMessage(arg) {
   if (!(arg instanceof api_api_pb.EasyTransferByPrivateMessage)) {
     throw new Error('Expected argument of type protocol.EasyTransferByPrivateMessage');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_EasyTransferByPrivateMessage(buffer_arg) {
@@ -285,7 +286,7 @@ function serialize_protocol_EasyTransferMessage(arg) {
   if (!(arg instanceof api_api_pb.EasyTransferMessage)) {
     throw new Error('Expected argument of type protocol.EasyTransferMessage');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_EasyTransferMessage(buffer_arg) {
@@ -296,7 +297,7 @@ function serialize_protocol_EasyTransferResponse(arg) {
   if (!(arg instanceof api_api_pb.EasyTransferResponse)) {
     throw new Error('Expected argument of type protocol.EasyTransferResponse');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_EasyTransferResponse(buffer_arg) {
@@ -307,7 +308,7 @@ function serialize_protocol_EmptyMessage(arg) {
   if (!(arg instanceof api_api_pb.EmptyMessage)) {
     throw new Error('Expected argument of type protocol.EmptyMessage');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_EmptyMessage(buffer_arg) {
@@ -318,7 +319,7 @@ function serialize_protocol_Exchange(arg) {
   if (!(arg instanceof core_Tron_pb.Exchange)) {
     throw new Error('Expected argument of type protocol.Exchange');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_Exchange(buffer_arg) {
@@ -329,7 +330,7 @@ function serialize_protocol_ExchangeCreateContract(arg) {
   if (!(arg instanceof core_Contract_pb.ExchangeCreateContract)) {
     throw new Error('Expected argument of type protocol.ExchangeCreateContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_ExchangeCreateContract(buffer_arg) {
@@ -340,7 +341,7 @@ function serialize_protocol_ExchangeInjectContract(arg) {
   if (!(arg instanceof core_Contract_pb.ExchangeInjectContract)) {
     throw new Error('Expected argument of type protocol.ExchangeInjectContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_ExchangeInjectContract(buffer_arg) {
@@ -351,7 +352,7 @@ function serialize_protocol_ExchangeList(arg) {
   if (!(arg instanceof api_api_pb.ExchangeList)) {
     throw new Error('Expected argument of type protocol.ExchangeList');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_ExchangeList(buffer_arg) {
@@ -362,7 +363,7 @@ function serialize_protocol_ExchangeTransactionContract(arg) {
   if (!(arg instanceof core_Contract_pb.ExchangeTransactionContract)) {
     throw new Error('Expected argument of type protocol.ExchangeTransactionContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_ExchangeTransactionContract(buffer_arg) {
@@ -373,7 +374,7 @@ function serialize_protocol_ExchangeWithdrawContract(arg) {
   if (!(arg instanceof core_Contract_pb.ExchangeWithdrawContract)) {
     throw new Error('Expected argument of type protocol.ExchangeWithdrawContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_ExchangeWithdrawContract(buffer_arg) {
@@ -384,7 +385,7 @@ function serialize_protocol_FreezeBalanceContract(arg) {
   if (!(arg instanceof core_Contract_pb.FreezeBalanceContract)) {
     throw new Error('Expected argument of type protocol.FreezeBalanceContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_FreezeBalanceContract(buffer_arg) {
@@ -395,7 +396,7 @@ function serialize_protocol_NodeList(arg) {
   if (!(arg instanceof api_api_pb.NodeList)) {
     throw new Error('Expected argument of type protocol.NodeList');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_NodeList(buffer_arg) {
@@ -406,7 +407,7 @@ function serialize_protocol_NumberMessage(arg) {
   if (!(arg instanceof api_api_pb.NumberMessage)) {
     throw new Error('Expected argument of type protocol.NumberMessage');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_NumberMessage(buffer_arg) {
@@ -417,7 +418,7 @@ function serialize_protocol_PaginatedMessage(arg) {
   if (!(arg instanceof api_api_pb.PaginatedMessage)) {
     throw new Error('Expected argument of type protocol.PaginatedMessage');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_PaginatedMessage(buffer_arg) {
@@ -428,7 +429,7 @@ function serialize_protocol_ParticipateAssetIssueContract(arg) {
   if (!(arg instanceof core_Contract_pb.ParticipateAssetIssueContract)) {
     throw new Error('Expected argument of type protocol.ParticipateAssetIssueContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_ParticipateAssetIssueContract(buffer_arg) {
@@ -439,7 +440,7 @@ function serialize_protocol_Proposal(arg) {
   if (!(arg instanceof core_Tron_pb.Proposal)) {
     throw new Error('Expected argument of type protocol.Proposal');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_Proposal(buffer_arg) {
@@ -450,7 +451,7 @@ function serialize_protocol_ProposalApproveContract(arg) {
   if (!(arg instanceof core_Contract_pb.ProposalApproveContract)) {
     throw new Error('Expected argument of type protocol.ProposalApproveContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_ProposalApproveContract(buffer_arg) {
@@ -461,7 +462,7 @@ function serialize_protocol_ProposalCreateContract(arg) {
   if (!(arg instanceof core_Contract_pb.ProposalCreateContract)) {
     throw new Error('Expected argument of type protocol.ProposalCreateContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_ProposalCreateContract(buffer_arg) {
@@ -472,7 +473,7 @@ function serialize_protocol_ProposalDeleteContract(arg) {
   if (!(arg instanceof core_Contract_pb.ProposalDeleteContract)) {
     throw new Error('Expected argument of type protocol.ProposalDeleteContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_ProposalDeleteContract(buffer_arg) {
@@ -483,7 +484,7 @@ function serialize_protocol_ProposalList(arg) {
   if (!(arg instanceof api_api_pb.ProposalList)) {
     throw new Error('Expected argument of type protocol.ProposalList');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_ProposalList(buffer_arg) {
@@ -494,7 +495,7 @@ function serialize_protocol_Return(arg) {
   if (!(arg instanceof api_api_pb.Return)) {
     throw new Error('Expected argument of type protocol.Return');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_Return(buffer_arg) {
@@ -505,7 +506,7 @@ function serialize_protocol_SellStorageContract(arg) {
   if (!(arg instanceof core_Contract_pb.SellStorageContract)) {
     throw new Error('Expected argument of type protocol.SellStorageContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_SellStorageContract(buffer_arg) {
@@ -516,7 +517,7 @@ function serialize_protocol_SetAccountIdContract(arg) {
   if (!(arg instanceof core_Contract_pb.SetAccountIdContract)) {
     throw new Error('Expected argument of type protocol.SetAccountIdContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_SetAccountIdContract(buffer_arg) {
@@ -527,7 +528,7 @@ function serialize_protocol_SmartContract(arg) {
   if (!(arg instanceof core_Tron_pb.SmartContract)) {
     throw new Error('Expected argument of type protocol.SmartContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_SmartContract(buffer_arg) {
@@ -538,7 +539,7 @@ function serialize_protocol_Transaction(arg) {
   if (!(arg instanceof core_Tron_pb.Transaction)) {
     throw new Error('Expected argument of type protocol.Transaction');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_Transaction(buffer_arg) {
@@ -549,7 +550,7 @@ function serialize_protocol_TransactionExtention(arg) {
   if (!(arg instanceof api_api_pb.TransactionExtention)) {
     throw new Error('Expected argument of type protocol.TransactionExtention');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_TransactionExtention(buffer_arg) {
@@ -560,7 +561,7 @@ function serialize_protocol_TransactionInfo(arg) {
   if (!(arg instanceof core_Tron_pb.TransactionInfo)) {
     throw new Error('Expected argument of type protocol.TransactionInfo');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_TransactionInfo(buffer_arg) {
@@ -571,7 +572,7 @@ function serialize_protocol_TransactionList(arg) {
   if (!(arg instanceof api_api_pb.TransactionList)) {
     throw new Error('Expected argument of type protocol.TransactionList');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_TransactionList(buffer_arg) {
@@ -582,7 +583,7 @@ function serialize_protocol_TransactionListExtention(arg) {
   if (!(arg instanceof api_api_pb.TransactionListExtention)) {
     throw new Error('Expected argument of type protocol.TransactionListExtention');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_TransactionListExtention(buffer_arg) {
@@ -593,7 +594,7 @@ function serialize_protocol_TransactionSign(arg) {
   if (!(arg instanceof core_Tron_pb.TransactionSign)) {
     throw new Error('Expected argument of type protocol.TransactionSign');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_TransactionSign(buffer_arg) {
@@ -604,7 +605,7 @@ function serialize_protocol_TransferAssetContract(arg) {
   if (!(arg instanceof core_Contract_pb.TransferAssetContract)) {
     throw new Error('Expected argument of type protocol.TransferAssetContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_TransferAssetContract(buffer_arg) {
@@ -615,7 +616,7 @@ function serialize_protocol_TransferContract(arg) {
   if (!(arg instanceof core_Contract_pb.TransferContract)) {
     throw new Error('Expected argument of type protocol.TransferContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_TransferContract(buffer_arg) {
@@ -626,7 +627,7 @@ function serialize_protocol_TriggerSmartContract(arg) {
   if (!(arg instanceof core_Contract_pb.TriggerSmartContract)) {
     throw new Error('Expected argument of type protocol.TriggerSmartContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_TriggerSmartContract(buffer_arg) {
@@ -637,7 +638,7 @@ function serialize_protocol_UnfreezeAssetContract(arg) {
   if (!(arg instanceof core_Contract_pb.UnfreezeAssetContract)) {
     throw new Error('Expected argument of type protocol.UnfreezeAssetContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_UnfreezeAssetContract(buffer_arg) {
@@ -648,7 +649,7 @@ function serialize_protocol_UnfreezeBalanceContract(arg) {
   if (!(arg instanceof core_Contract_pb.UnfreezeBalanceContract)) {
     throw new Error('Expected argument of type protocol.UnfreezeBalanceContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_UnfreezeBalanceContract(buffer_arg) {
@@ -659,7 +660,7 @@ function serialize_protocol_UpdateAssetContract(arg) {
   if (!(arg instanceof core_Contract_pb.UpdateAssetContract)) {
     throw new Error('Expected argument of type protocol.UpdateAssetContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_UpdateAssetContract(buffer_arg) {
@@ -670,7 +671,7 @@ function serialize_protocol_UpdateEnergyLimitContract(arg) {
   if (!(arg instanceof core_Contract_pb.UpdateEnergyLimitContract)) {
     throw new Error('Expected argument of type protocol.UpdateEnergyLimitContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_UpdateEnergyLimitContract(buffer_arg) {
@@ -681,7 +682,7 @@ function serialize_protocol_UpdateSettingContract(arg) {
   if (!(arg instanceof core_Contract_pb.UpdateSettingContract)) {
     throw new Error('Expected argument of type protocol.UpdateSettingContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_UpdateSettingContract(buffer_arg) {
@@ -692,7 +693,7 @@ function serialize_protocol_VoteWitnessContract(arg) {
   if (!(arg instanceof core_Contract_pb.VoteWitnessContract)) {
     throw new Error('Expected argument of type protocol.VoteWitnessContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_VoteWitnessContract(buffer_arg) {
@@ -703,7 +704,7 @@ function serialize_protocol_WithdrawBalanceContract(arg) {
   if (!(arg instanceof core_Contract_pb.WithdrawBalanceContract)) {
     throw new Error('Expected argument of type protocol.WithdrawBalanceContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_WithdrawBalanceContract(buffer_arg) {
@@ -714,7 +715,7 @@ function serialize_protocol_WitnessCreateContract(arg) {
   if (!(arg instanceof core_Contract_pb.WitnessCreateContract)) {
     throw new Error('Expected argument of type protocol.WitnessCreateContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_WitnessCreateContract(buffer_arg) {
@@ -725,7 +726,7 @@ function serialize_protocol_WitnessList(arg) {
   if (!(arg instanceof api_api_pb.WitnessList)) {
     throw new Error('Expected argument of type protocol.WitnessList');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_WitnessList(buffer_arg) {
@@ -736,7 +737,7 @@ function serialize_protocol_WitnessUpdateContract(arg) {
   if (!(arg instanceof core_Contract_pb.WitnessUpdateContract)) {
     throw new Error('Expected argument of type protocol.WitnessUpdateContract');
   }
-  return Buffer.from(arg.serializeBinary());
+  return new Buffer(arg.serializeBinary());
 }
 
 function deserialize_protocol_WitnessUpdateContract(buffer_arg) {
@@ -1314,6 +1315,28 @@ var WalletService = exports.WalletService = {
     responseSerialize: serialize_protocol_AssetIssueContract,
     responseDeserialize: deserialize_protocol_AssetIssueContract,
   },
+  getAssetIssueListByName: {
+    path: '/protocol.Wallet/GetAssetIssueListByName',
+    requestStream: false,
+    responseStream: false,
+    requestType: api_api_pb.BytesMessage,
+    responseType: api_api_pb.AssetIssueList,
+    requestSerialize: serialize_protocol_BytesMessage,
+    requestDeserialize: deserialize_protocol_BytesMessage,
+    responseSerialize: serialize_protocol_AssetIssueList,
+    responseDeserialize: deserialize_protocol_AssetIssueList,
+  },
+  getAssetIssueById: {
+    path: '/protocol.Wallet/GetAssetIssueById',
+    requestStream: false,
+    responseStream: false,
+    requestType: api_api_pb.BytesMessage,
+    responseType: core_Contract_pb.AssetIssueContract,
+    requestSerialize: serialize_protocol_BytesMessage,
+    requestDeserialize: deserialize_protocol_BytesMessage,
+    responseSerialize: serialize_protocol_AssetIssueContract,
+    responseDeserialize: deserialize_protocol_AssetIssueContract,
+  },
   // Please use GetNowBlock2 instead of this function.
   getNowBlock: {
     path: '/protocol.Wallet/GetNowBlock',
@@ -1832,6 +1855,50 @@ var WalletSolidityService = exports.WalletSolidityService = {
     requestDeserialize: deserialize_protocol_NumberMessage,
     responseSerialize: serialize_protocol_NumberMessage,
     responseDeserialize: deserialize_protocol_NumberMessage,
+  },
+  getDelegatedResource: {
+    path: '/protocol.WalletSolidity/GetDelegatedResource',
+    requestStream: false,
+    responseStream: false,
+    requestType: api_api_pb.DelegatedResourceMessage,
+    responseType: api_api_pb.DelegatedResourceList,
+    requestSerialize: serialize_protocol_DelegatedResourceMessage,
+    requestDeserialize: deserialize_protocol_DelegatedResourceMessage,
+    responseSerialize: serialize_protocol_DelegatedResourceList,
+    responseDeserialize: deserialize_protocol_DelegatedResourceList,
+  },
+  getDelegatedResourceAccountIndex: {
+    path: '/protocol.WalletSolidity/GetDelegatedResourceAccountIndex',
+    requestStream: false,
+    responseStream: false,
+    requestType: api_api_pb.BytesMessage,
+    responseType: core_Tron_pb.DelegatedResourceAccountIndex,
+    requestSerialize: serialize_protocol_BytesMessage,
+    requestDeserialize: deserialize_protocol_BytesMessage,
+    responseSerialize: serialize_protocol_DelegatedResourceAccountIndex,
+    responseDeserialize: deserialize_protocol_DelegatedResourceAccountIndex,
+  },
+  getExchangeById: {
+    path: '/protocol.WalletSolidity/GetExchangeById',
+    requestStream: false,
+    responseStream: false,
+    requestType: api_api_pb.BytesMessage,
+    responseType: core_Tron_pb.Exchange,
+    requestSerialize: serialize_protocol_BytesMessage,
+    requestDeserialize: deserialize_protocol_BytesMessage,
+    responseSerialize: serialize_protocol_Exchange,
+    responseDeserialize: deserialize_protocol_Exchange,
+  },
+  listExchanges: {
+    path: '/protocol.WalletSolidity/ListExchanges',
+    requestStream: false,
+    responseStream: false,
+    requestType: api_api_pb.EmptyMessage,
+    responseType: api_api_pb.ExchangeList,
+    requestSerialize: serialize_protocol_EmptyMessage,
+    requestDeserialize: deserialize_protocol_EmptyMessage,
+    responseSerialize: serialize_protocol_ExchangeList,
+    responseDeserialize: deserialize_protocol_ExchangeList,
   },
   getTransactionById: {
     path: '/protocol.WalletSolidity/GetTransactionById',
