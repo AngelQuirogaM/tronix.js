@@ -39,6 +39,7 @@ function deserializeAccount(accountRaw) {
   if (account.assetIssuedName) {
     account.assetIssuedName = bytesToString(Array.from(accountRaw.getAssetIssuedName()));
   }
+  
   account.balance = accountRaw.getBalance();
   account.assetMap = account.assetMap.map(asset => ({
     name: asset[0],
