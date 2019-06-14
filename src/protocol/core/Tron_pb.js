@@ -7206,7 +7206,6 @@ proto.protocol.Transaction.Result.prototype.setUnfreezeAmount = function(value) 
 };
 
 
-<<<<<<< HEAD
 /**
  * optional int64 exchange_received_amount = 18;
  * @return {number}
@@ -7266,10 +7265,6 @@ proto.protocol.Transaction.Result.prototype.setExchangeId = function(value) {
   jspb.Message.setProto3IntField(this, 21, value);
 };
 
-
-
-=======
->>>>>>> upstream/master
 /**
  * optional int64 exchange_received_amount = 18;
  * @return {number}
