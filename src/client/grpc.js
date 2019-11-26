@@ -594,6 +594,37 @@ class GrpcClient {
   }
 
   /**
+   * Trigger Smart Contract
+   * 
+   * @returns {Promise<*>}
+   */
+  async triggerSmartContract(priKey, from, contractAddress, data, callValue = 0, callTokenValue = 0, tokenId = 0)
+  {
+    const triggerContract = buildTriggerSmartContract(
+      from,
+      contractAddress,
+      callValue,
+      data,
+      callTokenValue,
+      tokenId
+    );
+    const nowBlock = await this.getNowBlock();
+    const referredTransaction = addBlockReferenceToTransaction(
+      triggerContract,
+      nowBlock
+    );
+    //if (data) addDataToTransaction(triggerContract, data);
+    const signedTransaction = signTransaction(referredTransaction, priKey);
+    const sendTransaction = await this.api.broadcastTransaction(
+      signedTransaction
+    );
+    return {
+      ...sendTransaction.toObject(),
+      transaction: deserializeTransaction(signedTransaction)
+    };
+  }
+
+  /**
    * Broadcast transaction
    *
    * @returns {Promise<*>}

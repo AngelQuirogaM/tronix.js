@@ -749,6 +749,39 @@ function buildExchangeTransactionContractTransaction(
 }
 
 /**
+ * Trigger Smart Contract
+ *
+ * @param address Exchange withdraw address (origin)
+ * @param exchangeId Exchange id number
+ * @param tokenId token id to inject
+ * @param quantity Quantity of tokens to withdraw
+ */
+function buildTriggerSmartContract(
+  address,
+  contractAddress,
+  callValue,
+  data,
+  tokenValue,
+  tokenId
+) {
+  const contract = new TriggerSmartContract();
+  contract.setOwnerAddress(Uint8Array.from(decode58Check(address)));
+  contract.setContractAddress(Uint8Array.from(decode58Check(contractAddress)));
+  contract.setCallValue(callValue);
+  contract.setData(encodeString(data));
+  contract.setCallTokenValue(tokenValue);
+  contract.setTokenId(tokenId);
+
+  const transaction = buildTransferContract(
+    contract,
+    Transaction.Contract.ContractType.TRIGGERSMARTCONTRACT,
+    'TriggerSmartContract'
+  );
+
+  return transaction;
+}
+
+/**
  * Add block reference to transaction
  * This is a needed step after building the transaction before signing the transaction it to the network.
  * @param {Transaction} transaction a builded non-signed transaction
