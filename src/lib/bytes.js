@@ -74,7 +74,6 @@ function byteArray2hexStr(byteArray) {
   return str;
 }
 
-
 function longToByteArray(/*long*/long) {
   // we want to represent the input as a 8-bytes array
   var byteArray = [0, 0, 0, 0, 0, 0, 0, 0];

@@ -1,7 +1,7 @@
 const ADDRESS_PREFIX_TEST = 'a0';
 const ADDRESS_PREFIX = '41';
+const ADDRESS_PREFIX_REGEX = /^(41)/;
 const ADDRESS_SIZE = 34;
-
 
 function isAddressValid(address) {
   if (!address || address.length === 0) {
@@ -23,4 +23,5 @@ function isAddressValid(address) {
 module.exports = {
   isAddressValid,
   ADDRESS_PREFIX,
+  ADDRESS_PREFIX_REGEX
 };

@@ -4,7 +4,7 @@ const {
   SHA256,
   ECKeySign
 } = require('./crypto');
-const { btoa } = require('./base64');
+const { btoa } = require('../lib/base64');
 const { longToByteArray, byteArray2hexStr, bytesToString } = require('./bytes');
 const { hexStr2byteArray } = require('../lib/code');
 const { Transaction } = require('../protocol/core/Tron_pb');
@@ -768,7 +768,7 @@ function buildTriggerSmartContract(
   contract.setOwnerAddress(Uint8Array.from(decode58Check(address)));
   contract.setContractAddress(Uint8Array.from(decode58Check(contractAddress)));
   contract.setCallValue(callValue);
-  contract.setData(encodeString(data)); //function_selector()parameter1,\"parameter2\",[parameter3]
+  contract.setData(data); //function_selector()parameter1,\"parameter2\",[parameter3]
   contract.setCallTokenValue(tokenValue);
   contract.setTokenId(tokenId);
 

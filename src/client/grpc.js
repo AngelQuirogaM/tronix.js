@@ -13,6 +13,7 @@ const {
 } = require('../protocol/api/api_pb');
 const { WalletClient } = require('../protocol/api/api_grpc_pb');
 const { decode58Check } = require('../utils/crypto');
+const { abi } = require('../utils/abi');
 const { bytesToString, longToByteArray } = require('../utils/bytes');
 const { Account } = require('../protocol/core/Tron_pb');
 const {
@@ -601,8 +602,7 @@ class GrpcClient {
    */
   async triggerSmartContract(priKey, from, contractAddress, functionSelector, parameters, callValue = 0, callTokenValue = 0, tokenId = 0)
   {
-    let data = functionSelector;
-    data+=filterSmartContractParameters(parameters);
+    let data = abi.encode(functionSelector, parameters);
 
     const triggerContract = buildTriggerSmartContract(
       from,
@@ -626,26 +626,6 @@ class GrpcClient {
       ...sendTransaction.toObject(),
       transaction: deserializeTransaction(signedTransaction)
     };
-  }
-
-  filterSmartContractParameters(parameters)
-  {
-    let paramsString = "";
-    if (typeof parameters === 'string' || parameters instanceof String)
-    {
-      data+= "\""+parameters+"\"";
-    }
-    else if (parameters instanceof Array)
-    {
-      data+="[";
-      for(var i=0;i<parameters.length;i++)
-      {
-        if (i > 0) data+=",";
-        data += filterSmartContractParameters(parameters[i]);
-      }
-      data+="]";
-    }
-    return paramsString;
   }
 
   /**

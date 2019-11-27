@@ -1,5 +1,5 @@
 const { ADDRESS_SIZE, ADDRESS_PREFIX, ADDRESS_PREFIX_BYTE } = require('./address');
-const { base64DecodeFromString, hexStr2byteArray, base64EncodeToString } = require('../lib/code');
+const { base64DecodeFromString, hexStr2byteArray, base64EncodeToString, stringToBytes } = require('../lib/code');
 const { encode58, decode58 } = require('../lib/base58');
 const EC = require('elliptic').ec;
 const { keccak256 } = require('js-sha3');
@@ -52,6 +52,13 @@ function computeAddress(pubBytes) {
   let addressHex = hash.substring(24);
   addressHex = ADDRESS_PREFIX + addressHex;
   return hexStr2byteArray(addressHex);
+}
+
+// return address by String, priKeyBytes is base64String
+function getHexStrAddressFromString(publicAddres) {
+  const addressBytes = computeAddress(publicAddres.getBytes());
+  const addressHex = byteArray2hexStr(addressBytes);
+  return addressHex;
 }
 
 // return address by bytes, priKeyBytes is byte[]
@@ -139,6 +146,7 @@ function getHexStrAddressFromPriKeyBase64String(priKeyBase64String) {
   const addressHex = byteArray2hexStr(addressBytes);
   return addressHex;
 }
+
 // return address by String, priKeyBytes is base64String
 function getAddressFromPriKeyBase64String(priKeyBase64String) {
   const priKeyBytes = base64DecodeFromString(priKeyBase64String);
