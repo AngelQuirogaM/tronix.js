@@ -768,7 +768,7 @@ function buildTriggerSmartContract(
   contract.setOwnerAddress(Uint8Array.from(decode58Check(address)));
   contract.setContractAddress(Uint8Array.from(decode58Check(contractAddress)));
   contract.setCallValue(callValue);
-  contract.setData(encodeString(data));
+  contract.setData(encodeString(data)); //function_selector()parameter1,\"parameter2\",[parameter3]
   contract.setCallTokenValue(tokenValue);
   contract.setTokenId(tokenId);
 
@@ -862,6 +862,7 @@ module.exports = {
   buildExchangeInjectContractContractTransaction,
   buildExchangeWithdrawContractTransaction,
   buildExchangeTransactionContractTransaction,
+  buildTriggerSmartContract,
   addBlockReferenceToTransaction,
   addDataToTransaction,
   signTransaction,

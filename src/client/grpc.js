@@ -598,8 +598,11 @@ class GrpcClient {
    * 
    * @returns {Promise<*>}
    */
-  async triggerSmartContract(priKey, from, contractAddress, data, callValue = 0, callTokenValue = 0, tokenId = 0)
+  async triggerSmartContract(priKey, from, contractAddress, functionSelector, parameters, callValue = 0, callTokenValue = 0, tokenId = 0)
   {
+    let data = functionSelector;
+    data+=filterSmartContractParameters(parameters);
+
     const triggerContract = buildTriggerSmartContract(
       from,
       contractAddress,
@@ -622,6 +625,26 @@ class GrpcClient {
       ...sendTransaction.toObject(),
       transaction: deserializeTransaction(signedTransaction)
     };
+  }
+
+  filterSmartContractParameters(parameters)
+  {
+    let paramsString = "";
+    if (typeof parameters === 'string' || parameters instanceof String)
+    {
+      data+= "\""+parameters+"\"";
+    }
+    else if (parameters instanceof Array)
+    {
+      data+="[";
+      for(var i=0;i<parameters.length;i++)
+      {
+        if (i > 0) data+=",";
+        data += filterSmartContractParameters(parameters[i]);
+      }
+      data+="]";
+    }
+    return paramsString;
   }
 
   /**
