@@ -35,6 +35,7 @@ const {
   buildExchangeInjectContractContractTransaction,
   buildExchangeWithdrawContractTransaction,
   buildExchangeTransactionContractTransaction,
+  buildTriggerSmartContract,
   addBlockReferenceToTransaction,
   addDataToTransaction,
   signTransaction,
