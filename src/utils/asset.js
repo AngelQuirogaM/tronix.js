@@ -1,26 +1,31 @@
-const { getBase58CheckAddress } = require('./crypto');
-const { bytesToString } = require('./bytes');
 
-const deserializeAsset = assetRaw => ({
-  ownerAddress: getBase58CheckAddress(Array.from(assetRaw.getOwnerAddress())),
-  url: bytesToString(assetRaw.getUrl()),
-  name: bytesToString(assetRaw.getName()),
-  description: bytesToString(assetRaw.getDescription()),
-  startTime: assetRaw.getStartTime(),
-  endTime: assetRaw.getEndTime(),
-  voteScore: assetRaw.getVoteScore(),
-  totalSupply: assetRaw.getTotalSupply(),
-  trxNum: assetRaw.getTrxNum() / 1000,
-  num: assetRaw.getNum(),
-  frozenSupplyList: assetRaw.getFrozenSupplyList().map(frz => frz.toObject()),
-  abbr: bytesToString(assetRaw.getAbbr()),
-  precision: assetRaw.getPrecision ? assetRaw.getPrecision() : 0
-});
+const { deserializeTransactions } = require('../utils/transaction');
+const { getBase58CheckAddress, SHA256 } = require('../utils/crypto');
+const { byteArray2hexStr } = require('../lib/bytes');
+const { base64DecodeFromString } = require('../lib/code');
 
-const deserializeAssets = assetsRaw =>
-  assetsRaw.getAssetissueList().map(deserializeAsset);
+const deserializeBlock = (blockRaw) => {
+  const blockObj = blockRaw.toObject();
+  // block doesn't exists
+  if (!blockObj.blockHeader) return null;
+
+  const deserializedTxs = deserializeTransactions(blockRaw.getTransactionsList());
+  return {
+    transactionsList: deserializedTxs,
+    transactionsCount: deserializedTxs.length,
+    totalTrx: deserializedTxs.reduce((t, n) => t + ((n && n.amount) ? n.amount : 0), 0),
+    size: blockRaw.serializeBinary().length,
+    time: blockRaw.getBlockHeader().getRawData().getTimestamp(),
+    witnessAddress: getBase58CheckAddress(base64DecodeFromString(blockObj.blockHeader.rawData.witnessAddress)),
+    number: blockRaw.getBlockHeader().getRawData().getNumber(),
+    parentHash: byteArray2hexStr(blockRaw.getBlockHeader().getRawData().getParenthash()).toLowerCase(),
+    hash: byteArray2hexStr(SHA256(blockRaw.getBlockHeader().getRawData().serializeBinary())).toLowerCase(),
+  };
+};
+
+const deserializeBlocks = blocksRaw => blocksRaw.getBlockList().map(deserializeBlock);
 
 module.exports = {
-  deserializeAsset,
-  deserializeAssets
+  deserializeBlock,
+  deserializeBlocks,
 };

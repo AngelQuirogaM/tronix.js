@@ -5,7 +5,7 @@ const {
   ECKeySign
 } = require('./crypto');
 const { btoa } = require('../lib/base64');
-const { longToByteArray, byteArray2hexStr, bytesToString } = require('./bytes');
+const { longToByteArray, byteArray2hexStr, bytesToString } = require('../lib/bytes.js');
 const { hexStr2byteArray } = require('../lib/code');
 const { Transaction } = require('../protocol/core/Tron_pb');
 const google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
@@ -173,6 +173,9 @@ const TransactionFields = {
     return this.decodeAddress(address);
   },
   creatorAddress(address) {
+    return this.decodeAddress(address);
+  },
+  contractAddress(address) {
     return this.decodeAddress(address);
   },
   data(data) {
@@ -768,7 +771,7 @@ function buildTriggerSmartContract(
   contract.setOwnerAddress(Uint8Array.from(decode58Check(address)));
   contract.setContractAddress(Uint8Array.from(decode58Check(contractAddress)));
   contract.setCallValue(callValue);
-  contract.setData(data); //function_selector()parameter1,\"parameter2\",[parameter3]
+  contract.setData(Uint8Array.from(hexStr2byteArray(data))); //function_selector()parameter1,\"parameter2\",[parameter3]
   contract.setCallTokenValue(tokenValue);
   contract.setTokenId(tokenId);
 

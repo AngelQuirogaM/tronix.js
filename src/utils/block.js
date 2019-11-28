@@ -1,7 +1,7 @@
 
 const { deserializeTransactions } = require('../utils/transaction');
 const { getBase58CheckAddress, SHA256 } = require('../utils/crypto');
-const { byteArray2hexStr } = require('../utils/bytes');
+const { byteArray2hexStr } = require('../lib/bytes');
 const { base64DecodeFromString } = require('../lib/code');
 
 const deserializeBlock = (blockRaw) => {

@@ -1,7 +1,8 @@
 const { keccak256 } = require('js-sha3');
-import {utils} from 'ethers';
-import {address} from './address';
-import {decode58Check} from "./crypto";
+const { utils } = require('ethers');
+const {decode58Check} = require('./crypto');
+const {ADDRESS_PREFIX_REGEX} = require('./address');
+const {byteArray2hexStr} = require('../lib/bytes');
 
 // Parameter types
 const ADDRESS_TYPE = "address";
@@ -18,22 +19,24 @@ function decode(method, parameters)
 
 function encodeMethod(method)
 {
-    const hashed = keccak256(selector).toString();
-    return hashed.substring(0,4);
+    const hashed = keccak256(method).toString();
+    return hashed.substring(0,8);
 }
 
 function encodeParameters(method, parameters)
 {
     const methodTypes = getMethodTypes(method);
+    const parametersList = parameters.split(",");
+
     for(var i=0;i<methodTypes.length;i++)
     {
         if (methodTypes[i] == ADDRESS_TYPE)
         {
-            parameters[i] = Uint8Array.from(decode58Check("0x"+address.substring(1)));
+            parametersList[i] = byteArray2hexStr(decode58Check(parametersList[i])).toLowerCase().replace(ADDRESS_PREFIX_REGEX,'0x');
         }
     }
 
-    return utils.AbiCoder.encode(methodTypes,parameters);
+    return utils.defaultAbiCoder.encode(methodTypes,parametersList).substring(2);
 }
 
 function getMethodTypes(method)
@@ -43,7 +46,7 @@ function getMethodTypes(method)
 
     if (start + 1 < end)
     {
-        let list = method.substring(start,end).split(",");
+        let list = method.substring(start+1,end).split(",");
         return list;
     }
     else

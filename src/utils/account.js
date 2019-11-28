@@ -1,4 +1,4 @@
-const { byteArray2hexStr, bytesToString } = require('./bytes');
+const { byteArray2hexStr, bytesToString } = require('../lib/bytes');
 const {
   getBase58CheckAddress,
   genPriKey,
