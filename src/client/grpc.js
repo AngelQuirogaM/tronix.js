@@ -13,9 +13,9 @@ const {
 } = require('../protocol/api/api_pb');
 const { WalletClient } = require('../protocol/api/api_grpc_pb');
 const { decode58Check } = require('../utils/crypto');
-const { encode } = require('../utils/abi');
 const { bytesToString, longToByteArray } = require('../lib/bytes');
-const { Account } = require('../protocol/core/Tron_pb');
+const { Account, Transaction } = require('../protocol/core/Tron_pb');
+
 const {
   stringToBytes,
   hexStr2byteArray,
@@ -42,6 +42,7 @@ const {
   signTransaction,
   decodeTransactionFields,
   deserializeTransaction,
+  deserializeTransactionInfo,
   deserializeEasyTransfer
 } = require('../utils/transaction');
 
@@ -216,6 +217,18 @@ class GrpcClient {
     txByte.setValue(new Uint8Array(hexStr2byteArray(txHash.toUpperCase())));
     const transaction = await this.api.getTransactionById(txByte);
     return deserializeTransaction(transaction);
+  }
+
+  /**
+   * Retrieve transaction info by id
+   *
+   * @returns {Promise<*>}
+   */
+  async getTransactionInfoById(txHash) {
+    const txByte = new BytesMessage();
+    txByte.setValue(new Uint8Array(hexStr2byteArray(txHash.toUpperCase())));
+    const transactionInfo = await this.api.getTransactionInfoById(txByte);
+    return deserializeTransactionInfo(transactionInfo);
   }
 
   /**
@@ -602,13 +615,12 @@ class GrpcClient {
    */
   async triggerSmartContract(priKey, from, contractAddress, functionSelector, parameters, callValue = 0, callTokenValue = 0, tokenId = 0)
   {
-    let data = encode(functionSelector, parameters);
-
     const triggerContract = buildTriggerSmartContract(
       from,
       contractAddress,
       callValue,
-      data,
+      functionSelector,
+      parameters,
       callTokenValue,
       tokenId
     );
@@ -617,15 +629,18 @@ class GrpcClient {
       triggerContract,
       nowBlock
     );
-    //if (data) addDataToTransaction(triggerContract, data);
+
     const signedTransaction = signTransaction(referredTransaction, priKey);
     const sendTransaction = await this.api.broadcastTransaction(
       signedTransaction
     );
-    return {
-      ...sendTransaction.toObject(),
-      transaction: deserializeTransaction(signedTransaction)
+
+    const result = {
+      ...sendTransaction.toObject()
     };
+
+    result.transaction = deserializeTransaction(signedTransaction);
+    return result;
   }
 
   /**

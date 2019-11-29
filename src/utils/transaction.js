@@ -7,6 +7,7 @@ const {
 const { btoa } = require('../lib/base64');
 const { longToByteArray, byteArray2hexStr, bytesToString } = require('../lib/bytes.js');
 const { hexStr2byteArray } = require('../lib/code');
+const { encodeAbi, decodeAbi } = require('../utils/abi');
 const { Transaction } = require('../protocol/core/Tron_pb');
 const google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
 const { base64DecodeFromString } = require('../lib/code');
@@ -178,8 +179,15 @@ const TransactionFields = {
   contractAddress(address) {
     return this.decodeAddress(address);
   },
-  data(data) {
-    return Buffer.from(data, 'base64').toString('ascii');
+  data(data, contract) {
+    if (contract == ContractType.TRIGGERSMARTCONTRACT)
+    {
+      return data;
+    }
+    else
+    {
+      return Buffer.from(data, 'base64').toString('ascii');
+    }
   },
   assetName(token) {
     return bytesToString(Array.from(base64DecodeFromString(token)));
@@ -240,12 +248,29 @@ function deserializeTransaction(tx) {
       SHA256(tx.getRawData().serializeBinary())
     ).toLowerCase();
     transference.time = tx.getRawData().getTimestamp();
-    transference.data = transaction.data;
+    if (contractType == ContractType.TRIGGERSMARTCONTRACT)
+    {
+      transference.data = byteArray2hexStr(base64DecodeFromString(transference.data)).toLowerCase();
+      transference.data = decodeAbi(transference.data);
+    }
+    else
+    {
+      transference.data = transaction.data;
+    }
     transference = decodeTransactionFields(transference);
     return transference;
   } catch (err) {
     throw err;
   }
+}
+
+function deserializeTransactionInfo(txInfo) {
+  let transactionInfo = txInfo.toObject();
+  //TODO this next part is not right. transaction info != transaction but works for many basic fields.
+  transactionInfo = decodeTransactionFields(transactionInfo);
+  transactionInfo.hash = byteArray2hexStr(txInfo.getId()).toLowerCase();
+  delete(transactionInfo.id);
+  return transactionInfo;
 }
 
 function deserializeTransactions(transactionsList = []) {
@@ -763,7 +788,8 @@ function buildTriggerSmartContract(
   address,
   contractAddress,
   callValue,
-  data,
+  functionSelector,
+  parameters,
   tokenValue,
   tokenId
 ) {
@@ -771,6 +797,7 @@ function buildTriggerSmartContract(
   contract.setOwnerAddress(Uint8Array.from(decode58Check(address)));
   contract.setContractAddress(Uint8Array.from(decode58Check(contractAddress)));
   contract.setCallValue(callValue);
+  const data = encodeAbi(functionSelector, parameters);
   contract.setData(Uint8Array.from(hexStr2byteArray(data))); //function_selector()parameter1,\"parameter2\",[parameter3]
   contract.setCallTokenValue(tokenValue);
   contract.setTokenId(tokenId);
@@ -872,5 +899,6 @@ module.exports = {
   decodeTransactionFields,
   deserializeTransaction,
   deserializeTransactions,
+  deserializeTransactionInfo,
   deserializeEasyTransfer
 };

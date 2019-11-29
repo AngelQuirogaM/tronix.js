@@ -4,7 +4,7 @@ const { encode58, decode58 } = require('../lib/base58');
 const EC = require('elliptic').ec;
 const { keccak256 } = require('js-sha3');
 const jsSHA = require('../lib/sha256');
-const { byte2hexStr, byteArray2hexStr } = require('./bytes');
+const { byte2hexStr, byteArray2hexStr } = require('../lib/bytes');
 
 function arrayToBase64String(a) {
   return btoa(String.fromCharCode(...a));
