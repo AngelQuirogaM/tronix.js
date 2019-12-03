@@ -1,13 +1,13 @@
+const { btoa } = require('../lib/base64');
 const {
   getBase58CheckAddress,
   decode58Check,
   SHA256,
   ECKeySign
-} = require('./crypto');
-const { btoa } = require('../lib/base64');
+} = require('../utils/crypto');
 const { longToByteArray, byteArray2hexStr, bytesToString } = require('../lib/bytes.js');
 const { hexStr2byteArray } = require('../lib/code');
-const { encodeAbi, decodeAbi } = require('../utils/abi');
+const { encodeAbi, decodeAbiParams, decodeAbiResult } = require('../utils/abi');
 const { Transaction } = require('../protocol/core/Tron_pb');
 const google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
 const { base64DecodeFromString } = require('../lib/code');
@@ -209,7 +209,10 @@ const TransactionFields = {
   },
   secondTokenId(token) {
     return bytesToString(Array.from(base64DecodeFromString(token)));
-  }
+  },
+  resmessage(token) {
+    return bytesToString(Array.from(base64DecodeFromString(token)));
+  },
 };
 
 function decodeTransactionFields(transaction) {
@@ -250,13 +253,11 @@ function deserializeTransaction(tx) {
     transference.time = tx.getRawData().getTimestamp();
     if (contractType == ContractType.TRIGGERSMARTCONTRACT)
     {
-      transference.data = byteArray2hexStr(base64DecodeFromString(transference.data)).toLowerCase();
-      transference.data = decodeAbi(transference.data);
+      transference.abi = byteArray2hexStr(base64DecodeFromString(transference.data)).toLowerCase();
+      transference.params = decodeAbiParams(transference.abi);
     }
-    else
-    {
-      transference.data = transaction.data;
-    }
+    
+    transference.data = transaction.data;
     transference = decodeTransactionFields(transference);
     return transference;
   } catch (err) {
@@ -264,11 +265,27 @@ function deserializeTransaction(tx) {
   }
 }
 
-function deserializeTransactionInfo(txInfo) {
+function deserializeTransactionInfo(txInfo, abiInput) {
   let transactionInfo = txInfo.toObject();
   //TODO this next part is not right. transaction info != transaction but works for many basic fields.
   transactionInfo = decodeTransactionFields(transactionInfo);
   transactionInfo.hash = byteArray2hexStr(txInfo.getId()).toLowerCase();
+
+  if (transactionInfo.contractresultList && transactionInfo.contractresultList.length > 0)
+  {
+    for(var i=0;i<transactionInfo.contractresultList.length;i++)
+    {
+      transactionInfo.contractresultList[i] = byteArray2hexStr(base64DecodeFromString(transactionInfo.contractresultList[i])).toLowerCase();
+    }
+
+    if (abiInput)
+    {
+      console.log(transactionInfo);
+      transactionInfo.contractresultList = decodeAbiResult(transactionInfo.contractresultList,abiInput);
+    }
+  }
+
+  
   delete(transactionInfo.id);
   return transactionInfo;
 }

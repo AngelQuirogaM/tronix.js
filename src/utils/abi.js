@@ -10,14 +10,14 @@ const {byteArray2hexStr} = require('../lib/bytes');
 const METHODS = 
 {
     //TRC20 https://github.com/tronprotocol/tron-contracts/blob/master/contracts/tokens/TRC20/TRC20.sol
-    "totalSupply()": "(unit256)",
-    "balanceOf(address)": "(unit256)",
-    "allowance(address,address)":"(unit256)",
-    "transfer(address,uint256)": "(address,uint256)",// transaction info = "(bool)",
-    "approve(address,uint256 value)": "(address,uint256)",// transaction info = "(bool)",
-    "transferFrom(address,address,uint256)": "(address,address,uint256)",// transaction info = "(bool)",
-    "increaseAllowance(address,uint256)": "(address,uint256)",// transaction info = "(bool)",
-    "decreaseAllowance(address,uint256)": "(address,uint256)",// transaction info = "(bool)",
+    "totalSupply()" : "(uint256)",
+    "balanceOf(address)" : "(uint256)",
+    "allowance(address,address)" :"(uint256)",
+    "transfer(address,uint256)" : "(bool)",
+    "approve(address,uint256 value)" : "(bool)",
+    "transferFrom(address,address,uint256)" : "(bool)",
+    "increaseAllowance(address,uint256)" : "(bool)",
+    "decreaseAllowance(address,uint256)" : "(bool)",
 }
 
 //dynamically added by the methods
@@ -42,27 +42,61 @@ function encodeAbi(method, parameters)
     return encodeMethod(method) + encodeParameters(method, parameters);
 }
 
-function decodeAbi(input , method = undefined)
+function decodeAbiParams(input , method = undefined)
 {
     if (method == undefined)
     {
         if (METHOD_IDS[input.substring(0,8)] == undefined) return input;
-        method = METHOD_IDS[input.substring(0,8)];
+        method = METHOD_IDS[input.substring(0,8)].function;
     }
 
-    const functionTypes = getTypes(method.function);
+    const functionTypes = getTypes(method);
     const decoded = utils.defaultAbiCoder.decode(functionTypes, '0x'+input.substring(8));
-    const returnTypes = getTypes(method.return);
 
-    for(var i=0;i<returnTypes.length;i++)
+    for(var i=0;i<functionTypes.length;i++)
     {
-        if (returnTypes[i] == ADDRESS_TYPE)
+        if (functionTypes[i] == ADDRESS_TYPE)
         {
             decoded[i] = getBase58CheckAddress(hexStr2byteArray(ADDRESS_PREFIX + decoded[i].substring(2)));
         }
         else if (decoded[i]._ethersType == "BigNumber")
         {
             decoded[i] = decoded[i].toString();
+        }
+    }
+
+    return decoded;
+}
+
+function decodeAbiResult(results, input, method = undefined)
+{
+    if (method == undefined)
+    {
+        if (METHOD_IDS[input.substring(0,8)] == undefined) return input;
+        method = METHOD_IDS[input.substring(0,8)].return;
+    }
+
+    const resultTypes = getTypes(method);
+
+    for(var i=0;i<results.length;i++)
+    {
+        results[i] = '0x'+results[i];
+    }
+    const decoded = [results.length];
+
+    for(var i=0;i<resultTypes.length;i++)
+    {
+        if (results.length > i)
+        {
+            decoded[i] = utils.defaultAbiCoder.decode([resultTypes[i]], results[i])[0];
+            if (resultTypes[i] == ADDRESS_TYPE)
+            {
+                decoded[i] = getBase58CheckAddress(hexStr2byteArray(ADDRESS_PREFIX + decoded[i].substring(2)));
+            }
+            else if (decoded[i]._ethersType == "BigNumber")
+            {
+                decoded[i] = decoded[i].toString();
+            }
         }
     }
 
@@ -110,5 +144,6 @@ initializeMethodIds();
 
 module.exports = {
     encodeAbi,
-    decodeAbi
+    decodeAbiParams,
+    decodeAbiResult
 }

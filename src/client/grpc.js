@@ -47,6 +47,7 @@ const {
 } = require('../utils/transaction');
 
 class GrpcClient {
+  
   constructor(options) {
     this.hostname = options.hostname;
     this.port = options.port || 50051;
@@ -224,11 +225,33 @@ class GrpcClient {
    *
    * @returns {Promise<*>}
    */
-  async getTransactionInfoById(txHash) {
+  async getTransactionInfoById(txHash, abiInput = undefined) {
     const txByte = new BytesMessage();
     txByte.setValue(new Uint8Array(hexStr2byteArray(txHash.toUpperCase())));
     const transactionInfo = await this.api.getTransactionInfoById(txByte);
-    return deserializeTransactionInfo(transactionInfo);
+    return deserializeTransactionInfo(transactionInfo, abiInput);
+  }
+
+  /**
+   * Retrieve transaction info by id recursively
+   *
+   * @returns {Promise<*>}
+   */
+  async getTransactionInfoByIdRecursive(hash, abiInput, tries = 20, delayBetweenTries = 2000) {
+    let transactionInfo;
+    do
+    {
+      await this.sleep(delayBetweenTries);
+      tries--;
+      transactionInfo = await this.getTransactionInfoById(hash, abiInput);
+    }
+    while(tries > 0 && (transactionInfo == undefined || transactionInfo.hash == ""));
+    return (transactionInfo.hash == '') ? null: transactionInfo;
+  }
+
+  async sleep(ms)
+  {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
@@ -556,11 +579,11 @@ class GrpcClient {
   }
 
   /**
-   * Create transaction
+   * Transfer TRX
    *
    * @returns {Promise<*>}
    */
-  async createTransaction(priKey, from, to, amount, data) {
+  async transfer(priKey, from, to, amount, data) {
     const transferContract = buildTransferTransaction(from, to, amount);
     const nowBlock = await this.getNowBlock();
     const referredTransaction = addBlockReferenceToTransaction(
@@ -635,12 +658,101 @@ class GrpcClient {
       signedTransaction
     );
 
-    const result = {
-      ...sendTransaction.toObject()
+    return {
+      ...sendTransaction.toObject(),
+      transaction: deserializeTransaction(signedTransaction)
     };
+  }
 
-    result.transaction = deserializeTransaction(signedTransaction);
-    return result;
+  //TRC20 functions
+  
+  /* TODO this methods
+
+  "approve(address,uint256 value)" : "(bool)",
+  "increaseAllowance(address,uint256)" : "(bool)",
+  "decreaseAllowance(address,uint256)" : "(bool)",
+  
+  */
+
+  /**
+   * TRC20 Total supply
+   *
+   * @returns {Promise<*>}
+   */
+  async totalSupplyTRC20(priKey, from, contract) {
+
+    const response = await this.triggerSmartContract(priKey, from, contract, "totalSupply()",[]);
+
+    if (response && response.result == true && response.transaction && response.transaction.hash && response.transaction.abi)
+    {
+      response.transactionInfo = await this.getTransactionInfoByIdRecursive(response.transaction.hash, response.transaction.abi);
+      if (response.transactionInfo.result == 0 && response.transactionInfo.contractresultList && response.transactionInfo.contractresultList.length > 0)
+      {
+        response.response = response.transactionInfo.contractresultList[0];
+      }
+    }
+
+    return response;
+  }
+
+  /**
+   * TRC20 balance of address
+   *
+   * @returns {Promise<*>}
+   */
+  async balanceOfTRC20(priKey, from, contract) {
+    const response = await this.triggerSmartContract(priKey, from, contract, "balanceOf(address)",[from]);
+
+    if (response.result == true && response.transaction && response.transaction.hash && response.transaction.abi)
+    {
+      response.transactionInfo = await this.getTransactionInfoByIdRecursive(response.transaction.hash, response.transaction.abi);
+      if (response.transactionInfo.result == 0 && response.transactionInfo.contractresultList && response.transactionInfo.contractresultList.length > 0)
+      {
+        response.response = response.transactionInfo.contractresultList[0];
+      }
+    }
+
+    return response;
+  }
+
+  /**
+   * TRC20 ownter to spender allowance
+   *
+   * @returns {Promise<*>}
+   */
+  async allowanceTRC20(priKey, owner, spender, contract) {
+    const response = await this.triggerSmartContract(priKey, owner, contract, "allowance(address,address)",[owner, spender]);
+
+    if (response.result == true && response.transaction && response.transaction.hash && response.transaction.abi)
+    {
+      response.transactionInfo = await this.getTransactionInfoByIdRecursive(response.transaction.hash, response.transaction.abi);
+      if (response.transactionInfo.result == 0 && response.transactionInfo.contractresultList && response.transactionInfo.contractresultList.length > 0)
+      {
+        response.response = response.transactionInfo.contractresultList[0];
+      }
+    }
+
+    return response;
+  }
+
+  /**
+   * TRC20 transfer amount from address
+   *
+   * @returns {Promise<*>}
+   */
+  async transferTRC20(priKey, owner, to, amount, contract) {
+    const response = await this.triggerSmartContract(priKey, owner, contract, "transfer(address,uint256)",[to, amount]);
+
+    if (response.result == true && response.transaction && response.transaction.hash && response.transaction.abi)
+    {
+      response.transactionInfo = await this.getTransactionInfoByIdRecursive(response.transaction.hash, response.transaction.abi);
+      if (response.transactionInfo.result == 0 && response.transactionInfo.contractresultList && response.transactionInfo.contractresultList.length > 0)
+      {
+        response.response = response.transactionInfo.contractresultList[0];
+      }
+    }
+
+    return response;
   }
 
   /**
