@@ -51,7 +51,7 @@ class GrpcClient {
   constructor(options) {
     this.hostname = options.hostname;
     this.port = options.port || 50051;
-
+    this.feeLimit = options.feeLimit || 1000000;
     /**
      * @type {WalletClient}
      */
@@ -333,7 +333,8 @@ class GrpcClient {
     const nowBlock = await this.getNowBlock();
     const referredTransaction = addBlockReferenceToTransaction(
       freezeTransaction,
-      nowBlock
+      nowBlock,
+      this.feeLimit
     );
     const signedTransaction = signTransaction(referredTransaction, priKey);
     const sendTransaction = await this.api.broadcastTransaction(
@@ -355,7 +356,8 @@ class GrpcClient {
     const nowBlock = await this.getNowBlock();
     const referredTransaction = addBlockReferenceToTransaction(
       voteTransaction,
-      nowBlock
+      nowBlock,
+      this.feeLimit
     );
     const signedTransaction = signTransaction(referredTransaction, priKey);
     const sendTransaction = await broadcastTransaction(signedTransaction);
@@ -403,7 +405,8 @@ class GrpcClient {
     const nowBlock = await this.getNowBlock();
     const referredTransaction = addBlockReferenceToTransaction(
       assetTransaction,
-      nowBlock
+      nowBlock,
+      this.feeLimit
     );
     const signedTransaction = signTransaction(referredTransaction, priKey);
     const sendTransaction = await this.api.broadcastTransaction(
@@ -477,7 +480,8 @@ class GrpcClient {
     const nowBlock = await this.getNowBlock();
     const referredTransaction = addBlockReferenceToTransaction(
       exchangeTransaction,
-      nowBlock
+      nowBlock,
+      this.feeLimit
     );
     const signedTransaction = signTransaction(referredTransaction, priKey);
     const sendTransaction = await this.api.broadcastTransaction(
@@ -504,7 +508,8 @@ class GrpcClient {
     const nowBlock = await this.getNowBlock();
     const referredTransaction = addBlockReferenceToTransaction(
       exchangeTransaction,
-      nowBlock
+      nowBlock,
+      this.feeLimit
     );
     const signedTransaction = signTransaction(referredTransaction, priKey);
     const sendTransaction = await this.api.broadcastTransaction(
@@ -531,7 +536,8 @@ class GrpcClient {
     const nowBlock = await this.getNowBlock();
     const referredTransaction = addBlockReferenceToTransaction(
       exchangeTransaction,
-      nowBlock
+      nowBlock,
+      this.feeLimit
     );
     const signedTransaction = signTransaction(referredTransaction, priKey);
     const sendTransaction = await this.api.broadcastTransaction(
@@ -566,7 +572,8 @@ class GrpcClient {
     const nowBlock = await this.getNowBlock();
     const referredTransaction = addBlockReferenceToTransaction(
       exchangeTransaction,
-      nowBlock
+      nowBlock,
+      this.feeLimit
     );
     const signedTransaction = signTransaction(referredTransaction, priKey);
     const sendTransaction = await this.api.broadcastTransaction(
@@ -588,7 +595,8 @@ class GrpcClient {
     const nowBlock = await this.getNowBlock();
     const referredTransaction = addBlockReferenceToTransaction(
       transferContract,
-      nowBlock
+      nowBlock,
+      this.feeLimit
     );
     if (data) addDataToTransaction(transferContract, data);
     const signedTransaction = signTransaction(referredTransaction, priKey);
@@ -618,7 +626,8 @@ class GrpcClient {
     const nowBlock = await this.getNowBlock();
     const referredTransaction = addBlockReferenceToTransaction(
       transferContract,
-      nowBlock
+      nowBlock,
+      this.feeLimit
     );
     if (data) addDataToTransaction(transferContract, data);
     const signedTransaction = signTransaction(referredTransaction, priKey);
@@ -650,9 +659,12 @@ class GrpcClient {
     const nowBlock = await this.getNowBlock();
     const referredTransaction = addBlockReferenceToTransaction(
       triggerContract,
-      nowBlock
+      nowBlock,
+      this.feeLimit
     );
-
+    
+    const result = await this.api.triggerContract(triggerContract);
+    console.log(result);
     const signedTransaction = signTransaction(referredTransaction, priKey);
     const sendTransaction = await this.api.broadcastTransaction(
       signedTransaction

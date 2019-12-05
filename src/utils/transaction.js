@@ -834,7 +834,7 @@ function buildTriggerSmartContract(
  * @param {Transaction} transaction a builded non-signed transaction
  * @param {Block} block the block to ref the transaction (usually the current block)
  */
-function addBlockReferenceToTransaction(transaction, block) {
+function addBlockReferenceToTransaction(transaction, block, feeLimit = 1000000) {
   const blockHash = block.hash;
   const blockNum = block.number;
 
@@ -851,7 +851,7 @@ function addBlockReferenceToTransaction(transaction, block) {
   rawData.setRefBlockHash(Uint8Array.from(generateBlockId.slice(8, 16)));
   rawData.setRefBlockBytes(Uint8Array.from(numBytes.slice(6, 8)));
   rawData.setExpiration(block.time + 60 * 5 * 1000);
-
+  rawData.setFeeLimit(feeLimit);
   transaction.setRawData(rawData);
   return transaction;
 }
