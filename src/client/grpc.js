@@ -663,8 +663,6 @@ class GrpcClient {
       this.feeLimit
     );
     
-    const result = await this.api.triggerContract(triggerContract);
-    console.log(result);
     const signedTransaction = signTransaction(referredTransaction, priKey);
     const sendTransaction = await this.api.broadcastTransaction(
       signedTransaction
