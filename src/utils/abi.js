@@ -25,6 +25,7 @@ let METHOD_IDS = {}
 
 // Parameter types
 const ADDRESS_TYPE = "address";
+const TRC10_TYPE = "trcToken";
 
 function initializeMethodIds()
 {
@@ -118,6 +119,11 @@ function encodeParameters(method, parameters)
         if (methodTypes[i] == ADDRESS_TYPE)
         {
             parameters[i] = byteArray2hexStr(decode58Check(parameters[i])).toLowerCase().replace(ADDRESS_PREFIX_REGEX,'0x');
+        }
+
+        if (methodTypes[i] == TRC10_TYPE)
+        {
+            methodTypes[i] = "uint256";
         }
     }
 
